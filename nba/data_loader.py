@@ -45,6 +45,13 @@ def kaggle_download_data(dataset: str) -> None:
     print(f"Data has been downloaded to {data_path}")
 
 
+# Explanation of the following code by Benjamin Brückner (blb46):
+# The click library is used to create command line interfaces with Python.
+# The @click.command() decorator is used to define a command line command.
+# The @click.option() decorator is used to define options for the command.
+# Using click allows to easily specify the command line arguments and options for the script when run in the command line.
+
+
 @click.command()  # type: ignore
 @click.option(  # type: ignore
     "--dataset",
@@ -69,6 +76,13 @@ def main(
     kaggle_api_key(user_name=user_name, api_key=api_key)
     kaggle_download_data(dataset=dataset)
 
+
+# Explanation of the following code by Benjamin Brückner (blb46):
+# Each python script has a special variable called __name__.
+# If the script is being run as the main program, __name__ is set to "__main__".
+# If the script is being imported from another module, __name__ is set to the module's name.
+# Therefore, this ensures that the script only runs when the file is executed directly and not when it is imported as a module.
+# (If it is imported as a module, one should import the functions and then call them from the other script)
 
 if __name__ == "__main__":
     main()
