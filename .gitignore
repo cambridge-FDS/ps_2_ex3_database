@@ -1,0 +1,8 @@
+# Ignore CSV files
+*.csv
+
+# Ignore environment files
+.env
+
+# Ignore SQLite database files
+*.sqlite
