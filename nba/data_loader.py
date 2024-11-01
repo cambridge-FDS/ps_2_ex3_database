@@ -5,9 +5,7 @@ from pathlib import Path
 import click
 
 
-def kaggle_api_key(
-    user_name: str | None = None, api_key: str | None = None
-) -> None:
+def kaggle_api_key(user_name: str | None = None, api_key: str | None = None) -> None:
     """
     Function that takes the kaggle API key as input and saves it to
     ~/.kaggle/kaggle.json if it doesn't exist
@@ -29,9 +27,7 @@ def kaggle_api_key(
                 json.dump(api_config, f)
 
             # Set file permissions to be readable only by the user
-            os.chmod(
-                kaggle_json, 0o600
-            )  # read and write permission only for the user
+            os.chmod(kaggle_json, 0o600)  # read and write permission only for the user
             print(f"Kaggle API key has been saved to {kaggle_json}")
 
 
