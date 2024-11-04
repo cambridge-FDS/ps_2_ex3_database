@@ -210,3 +210,32 @@ def clean_ma_data(data: pd.DataFrame, teams: list) -> pd.DataFrame:
     data = data.apply(lambda x: x.iloc[41:])
 
     return data
+
+
+# 4. Insights ___________
+def get_3pt_success_rate(con: sql.Connection, teams) -> pd.DataFrame:
+    """
+    Returns the average 3-point field goal percentage for each team for each year since 2008.
+    Args:
+        con: SQLite connection
+        teams: List of teams to include in the data
+    Returns:
+        DataFrame: DataFrame containing the average 3-point field goal percentage for each team for each year since 2008
+    """
+    query = """
+    SELECT
+        strftime('%Y', game_date) AS year,
+        team_details.nickname AS team_nickname,
+        AVG(fg3_pct_home) AS avg_fg3_pct_home
+    FROM game
+    JOIN team_details
+    ON game.team_id_home = team_details.team_id
+    WHERE strftime('%Y', game_date) >= '2008'
+    GROUP BY team_nickname, year;
+    """
+    data = pd.read_sql(query, con)
+    # Convert 'year' column to numeric type
+    data['year'] = pd.to_datetime(data['year'])
+    # Drop all teams except for the ones in the 'teams' list
+    data = data[data['team_nickname'].isin(teams)]
+    return data

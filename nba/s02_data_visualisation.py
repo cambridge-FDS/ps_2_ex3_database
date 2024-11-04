@@ -102,14 +102,14 @@ def create_figure():
     fig, ax = plt.subplots(figsize=(14, 8), dpi=150, facecolor='#222222')
     return fig, ax
 
-def plot_team_lines(data, x, y, main_team, linecolor, ax):
+def plot_team_lines(data, x, y, group_by, main_team, linecolor, ax):
     """Plot each team's line with specified colors."""
     # Generate a desaturated color palette for non-main teams
-    palette = sns.color_palette("crest", n_colors=data['team_name'].nunique())
+    palette = sns.color_palette("crest", n_colors=data[group_by].nunique())
     palette = [sns.desaturate(color, 0.3) for color in palette]
 
     # Loop through each team and plot
-    for i, (team_name, team_data) in enumerate(data.groupby("team_name")):
+    for i, (team_name, team_data) in enumerate(data.groupby(group_by)):
         color = linecolor if team_name == main_team else palette[i]
         sns.lineplot(data=team_data, x=x, y=y, label=team_name, linewidth=2, ax=ax, color=color)
 
@@ -171,7 +171,7 @@ def multi_team_visualisation(**kwargs) -> None:
     # Setup and create plot
     setup_plot_style()
     fig, ax = create_figure()
-    plot_team_lines(data, x, y, main_team, linecolor, ax)
+    plot_team_lines(data, x, y, group_by, main_team, linecolor, ax)
     add_labels(ax, xlabel, ylabel, title)
     style_legend(ax, main_team)
     highlight_championship_years(ax, championship_years, main_team, linecolor)
