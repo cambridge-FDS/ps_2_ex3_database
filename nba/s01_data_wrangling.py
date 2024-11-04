@@ -86,3 +86,127 @@ def get_avg_fg3_data(con: sql.Connection) -> pd.DataFrame:
     data = pd.read_sql(query, con)
     data['year'] = pd.to_numeric(data['year'])
     return data
+
+# 3. Insights ___________
+def create_team_win_statistics(con: sql.Connection) -> None:
+    # Drop the table if it already exists
+    con.execute("DROP TABLE IF EXISTS team_win_statistics")
+    query = """
+    CREATE TABLE team_win_statistics AS
+    SELECT
+        game.team_id_home AS team_id,
+        game.game_id AS game_id,
+        game.game_date AS date,
+        CASE WHEN game.wl_home = 'W' THEN 1 ELSE 0 END AS win
+    FROM game
+    ORDER BY team_id, date;
+    """
+    con.execute(query)
+
+    query = """
+    ALTER TABLE team_win_statistics
+    ADD COLUMN team_name TEXT;
+    """
+    con.execute(query)
+
+    query = """
+    UPDATE team_win_statistics
+    SET team_name = (
+        SELECT team_details.nickname
+        FROM team_details
+        WHERE team_details.team_id = team_win_statistics.team_id
+    );
+    """
+    con.execute(query)
+
+    query="""
+    ALTER TABLE team_win_statistics
+    ADD COLUMN ma_41 FLOAT;
+    """
+    con.execute(query)
+
+    return None
+
+
+def create_team_win_statistics_with_ma(con: sql.Connection) -> None:
+    # Drop the table if it already exists
+    con.execute("DROP TABLE IF EXISTS team_win_statistics_with_ma")
+    query = """
+    CREATE TABLE team_win_statistics_with_ma AS
+    SELECT
+        team_id,
+        game_id,
+        date,
+        win,
+        team_name,
+        ROUND(SUM(win) OVER (
+            PARTITION BY team_name
+            ORDER BY date
+            ROWS BETWEEN 40 PRECEDING AND CURRENT ROW
+        ) / 41.0, 3) AS ma_41
+    FROM team_win_statistics
+    ORDER BY team_id, date;
+    """
+    con.execute(query)
+
+
+    # Delete all teams where the team_name is NULL
+    query = """
+    DELETE FROM team_win_statistics_with_ma
+    WHERE team_name IS NULL;
+    """
+    con.execute(query)
+    return None
+
+
+def get_ma41_data(con: sql.Connection) -> pd.DataFrame:
+    """
+    Creates and returns a DataFrame containing the moving average of wins for each team over the last 41 home games.
+    Args:
+        con: SQLite connection
+    Returns:
+        DataFrame: DataFrame containing the moving average of wins for each team over the last 41 home games.
+    """
+    # First, create the ordinary win statistics table
+    create_team_win_statistics(con)
+    # Then, create the table containing moving average
+    create_team_win_statistics_with_ma(con)
+
+    # Select all data from the team_win_statistics_with_ma table
+    query = """
+    SELECT *
+    FROM team_win_statistics_with_ma
+    """
+    data = pd.read_sql(query, con)
+
+    # Return the entire team_win_statistics_with_ma table
+    return data
+
+
+
+def clean_ma_data(data: pd.DataFrame, teams: list) -> pd.DataFrame:
+    """
+    A function that cleans the moving average data by transforming the date column to a datetime object,
+    dropping all rows before 2008 and all rows where team_name is NULL, filtering the data to only include the teams in the list,
+    and dropping the first 41 rows of each group.
+    Args:
+        data: DataFrame containing the moving average data
+        teams: List of teams to include in the data
+    Returns:
+        DataFrame: Cleaned DataFrame containing the moving average data
+    """
+
+    # Transform the date column to a datetime object
+    data['date'] = pd.to_datetime(data['date'])
+
+    # Drop all rows before 2008 and all rows where team_name is NULL
+    data = data[data['date'] >= '2008-01-01']
+    data = data.dropna(subset=['team_name'])
+
+    # Filter the data to only include the teams in the list
+    data = data[data['team_name'].isin(teams)]
+
+    # Drop the first 41 rows of each group
+    data = data.apply(lambda x: x.iloc[41:])
+
+    return data

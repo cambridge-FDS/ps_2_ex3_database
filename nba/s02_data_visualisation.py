@@ -1,8 +1,8 @@
-from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from typing import Optional
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 def time_series_plot(**kwargs) -> None:
     """
@@ -87,3 +87,84 @@ def time_series_plot(**kwargs) -> None:
     fig.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9)
     fig.show()
     return None
+
+
+
+
+def ma_visualisation(**kwargs) -> None:
+    """
+    Function to visualize the moving average of a time series.
+
+    Args:
+        data (pd.DataFrame): The data to plot.
+
+    Returns:
+        None
+    """
+    if not isinstance(kwargs.get("data"), pd.DataFrame):
+        raise ValueError("The 'data' argument must be a pandas DataFrame.")
+    data = kwargs.get("data")
+    x = kwargs.get("x")
+    y = kwargs.get("y")
+    se_min = kwargs.get("se_min")
+    se_max = kwargs.get("se_max")
+    regression = kwargs.get("regression", False)
+    title = kwargs.get("title", "")
+    xlabel = kwargs.get("xlabel", x)
+    ylabel = kwargs.get("ylabel", y)
+    linecolor = kwargs.get("linecolor", "#1D428A")
+
+    # Setting a dark style for the entire plot, including outer space
+    sns.set_theme(style="darkgrid", rc={"axes.facecolor": "#222222", "grid.color": "#444444"})
+
+    # Create figure and axis
+    fig, ax = plt.subplots(figsize=(14, 8), dpi=150, facecolor='#222222')
+
+    # Customizing the font and resolution
+    sns.set_context("talk")
+
+    # Loop through each team and plot
+    for team_name, team_data in data.groupby("team_name"):
+        sns.lineplot(
+            data=team_data,
+            x=x,
+            y=y,
+            label=team_name,  # Add a label for each team
+            linewidth=2,
+            ax=ax
+        )
+
+        # Adding shaded error bands if available for each team
+        if se_min and se_max:
+            ax.fill_between(
+                team_data[x],
+                team_data[se_min],
+                team_data[se_max],
+                alpha=0.2
+            )
+
+    # Adding a regression line if specified (calculated across all teams)
+    if regression:
+        sns.regplot(
+            data=data,
+            x=x,
+            y=y,
+            scatter=False,
+            line_kws={"color": "grey", "linestyle": "dotted", "linewidth": 1.5},
+            ax=ax
+        )
+
+    # Enhancing labels and title
+    ax.set_xlabel(xlabel, fontsize=14, color='white', labelpad=10)
+    ax.set_ylabel(ylabel, fontsize=14, color='white', labelpad=10)
+    ax.set_title(title, fontsize=20, weight='bold', color='white', pad=20)
+
+    # Make axis ticks and labels white for readability on a dark background
+    ax.tick_params(colors='white')
+
+    # Adding legend for teams
+    ax.legend(title="Team", loc='upper left', fontsize=12)
+
+    # Increase space around elements
+    fig.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9)
+    plt.show()
