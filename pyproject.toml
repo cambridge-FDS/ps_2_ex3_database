@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nba_analysis"
+version = "2024.0.0"
+dependencies = [
+  "polars",
+  "pandas",
+  "duckdb",
+  "kaggle",
+  "sqlite",
+  "seaborn",
+  "pre-commit",
+  "ipykernel",
+  "click"
+]
+
+requires-python = ">=3.8"
