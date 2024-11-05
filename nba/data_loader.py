@@ -51,7 +51,6 @@ def kaggle_download_data(dataset: str) -> None:
 # The @click.option() decorator is used to define options for the command.
 # Using click allows to easily specify the command line arguments and options for the script when run in the command line.
 
-
 @click.command()  # type: ignore
 @click.option(  # type: ignore
     "--dataset",
