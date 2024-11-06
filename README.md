@@ -13,7 +13,7 @@ conda env create -f environment.yml
 Activate the environment by running:
 
 ```bash
-conda activate solution_ps2_ex3_database
+conda activate nba
 ```
 
 ## Pre-commit
@@ -44,7 +44,7 @@ download the data with by running the script from the terminal. Run the followin
 terminal being at the root of the repository.
 
 ```bash
-python nba/data_loader.py -u "your_user_name" -k "your_api_key" -d "wyattowalsh/basketball"
+python /nba_analysis/nba/data_loader.py -u "your_user_name" -k "your_api_key" -d "wyattowalsh/basketball"
 ```
 
 Replace "your_user_name" and "your_api_key" with your username and API key. This creates a json
