@@ -2,12 +2,14 @@ name: nba
 channels:
   - defaults
 dependencies:
-  - polars
   - pandas
-  - duckdb
-  - kaggle
   - sqlite
   - seaborn
   - pre-commit
   - ipykernel
   - click
+  - pip
+  - pip:
+    - polars
+    - kaggle
+    - duckdb
