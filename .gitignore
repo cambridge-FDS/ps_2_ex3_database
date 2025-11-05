@@ -1,3 +1,4 @@
 *.csv
 *.sqlite
 nba.egg-info/*
+nba/__pycache__/*
