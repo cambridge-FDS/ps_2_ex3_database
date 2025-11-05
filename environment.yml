@@ -1,6 +1,7 @@
 name: nba
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - polars
   - pandas

@@ -1,0 +1,20 @@
+[project]
+name = "nba"
+version = "0.1"
+requires-python = ">=3.9"
+authors = [
+  {name = "Gil Dexter"},
+  {name = "Adrian Ochs"},
+]
+description = "4 interesting findings!"
+readme = "README.md"
+keywords = ["nba", "data analysis", "data science", "visualization"]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+[project.scripts]
+nba_data_loader = "nba.data_loader:main"
+
+[tool.setuptools]
+packages = ["nba"]

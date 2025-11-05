@@ -1,0 +1,3 @@
+*.csv
+*.sqlite
+nba.egg-info/*
