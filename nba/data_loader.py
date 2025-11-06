@@ -3,6 +3,9 @@ import os
 import json
 from pathlib import Path
 import click
+import concurrent.futures
+from nba_api.stats.endpoints import leaguedashplayerstats
+import pandas as pd
 
 
 def kaggle_api_key(
@@ -47,6 +50,47 @@ def kaggle_download_data(dataset: str) -> None:
     kaggle.api.authenticate()
     kaggle.api.dataset_download_files(dataset, path=data_path, unzip=True)
     print(f"Data has been downloaded to {data_path}")
+
+
+# Retrieve career stats one id
+def query_league_stats(season: int, timeout: int = 30) -> pd.DataFrame:
+    career = leaguedashplayerstats.LeagueDashPlayerStats(
+        season=season, timeout=timeout
+    )
+    df: pd.DataFrame = career.get_data_frames()[0]
+    return df
+
+
+# Run stats queries in parallel
+def download_yearly_stats(
+    seasons: list[int], max_workers: int, timeout: int = 30
+) -> None:
+    # We can use a with statement to ensure threads are cleaned up promptly
+    root_path = Path(__file__).parent.parent
+    data_path = root_path / "data"
+    dfs = []
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=max_workers
+    ) as executor:
+        # Start the load operations and mark each future with its URL
+        future_to_df = {
+            executor.submit(
+                query_league_stats, season, timeout=timeout
+            ): season
+            for season in seasons
+        }
+        for future in concurrent.futures.as_completed(future_to_df):
+            season = future_to_df[future]
+            try:
+                df = future.result()
+                df["season"] = season
+                df.columns = df.columns.str.lower()
+                dfs.append(df)
+            except Exception as exc:
+                print("%r generated an exception: %s" % (season, exc))
+
+    all_players = pd.concat(dfs)
+    all_players.to_csv(f"{data_path}/season_player_stats.csv")
 
 
 @click.command()  # type: ignore

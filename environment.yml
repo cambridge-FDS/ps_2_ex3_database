@@ -13,3 +13,5 @@ dependencies:
   - pre-commit
   - ipykernel
   - click
+  - statsmodels
+  - nba_api

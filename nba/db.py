@@ -23,3 +23,13 @@ def query_line_score(
         f"{end_year}-01-01 00:00:00",
     )
     return pd.read_sql_query(query, connection, params=params)
+
+
+def query_combine_stats(
+    connection: sql.Connection,
+) -> pd.DataFrame:
+    query = """
+        SELECT *
+        FROM draft_combine_stats
+    """
+    return pd.read_sql_query(query, connection)
