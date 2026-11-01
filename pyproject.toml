@@ -1,0 +1,14 @@
+[build-system]
+requires = ['setuptools', 'setuptools-scm', 'wheel']
+
+[project]
+name = "nba"
+version = "0.1.0"
+
+[tool.setuptools]
+packages = ["nba"]
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+check_untyped_defs = true
