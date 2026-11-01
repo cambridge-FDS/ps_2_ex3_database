@@ -9,6 +9,6 @@ version = "0.1.0"
 packages = ["nba"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.12"
 ignore_missing_imports = true
 check_untyped_defs = true
