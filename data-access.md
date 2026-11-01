@@ -1,6 +1,6 @@
-# 2. Data access:
+# Data access:
 
-- We have prepared a data loading module named `nba/data_loader.py`. Have a look at it and write a brief explanation of
+- Write a brief explanation of
     - The purpose of the following code block:
 
         ```
