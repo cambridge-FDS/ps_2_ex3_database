@@ -1,3 +1,86 @@
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+# PS2 shared local-file policy (tracked coursework files are preserved)
+# OS and editors
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python, notebooks and local environments (commit pixi.lock)
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pixi/
+.venv/
+venv/
+env/
+.conda/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Each member's local agents, prompts, sessions and tool configuration
+.codex/
+.claude/
+.cursor/
+.agents/
+.agent/
+.gemini/
+.continue/
+.opencode/
+.aider*
+.roo/
+.clinerules/
+AGENTS.md
+AGENTS.local.md
+CLAUDE.md
+CLAUDE.local.md
+GEMINI.md
+GEMINI.local.md
+CODEX.md
+.cursorrules
+.cursorignore
+.mcp.json
+.mcp.*.json
+mcp.local.json
+
+# Credentials and per-machine settings
+.env
+.env.*
+!.env.example
+.secrets/
+secrets/
+.kaggle/
+kaggle.json
+access_token
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local scratch work; keep final notebooks, figures and source code tracked
+.local/
+scratch/
+tmp/
+*.log
+
+# Local datasets and databases; existing tracked course data is retained
+/data/
+*.csv
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.db
+*.db-*

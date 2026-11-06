@@ -16,7 +16,7 @@ repos:
     rev: v1.13.0
     hooks:
       - id: mypy
-        additional_dependencies: [types-seaborn, polars, pandas-stubs, matplotlib]
+        additional_dependencies: [types-seaborn, polars, pandas-stubs, matplotlib, click]
         args: ["--ignore-missing-imports", "--strict"]
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1

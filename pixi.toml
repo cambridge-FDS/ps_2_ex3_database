@@ -6,15 +6,23 @@ platforms = ["osx-arm64", "osx-64", "linux-64", "win-64"]
 version = "0.1.0"
 
 [tasks]
+jupyter = "jupyter lab"
+validate = "python scripts/validate_setup.py"
+
+[environments]
+nba = []
 
 [dependencies]
 python = "3.12.*"
 polars = "*"
-pandas = "*"
+pandas = ">=2.2,<3"
 duckdb = "*"
 kaggle = "*"
 sqlite = "*"
 seaborn = "*"
+matplotlib = "*"
+jupyterlab = "*"
 pre-commit = "*"
 ipykernel = "*"
 click = "*"
+nbformat = ">=5,<6"
