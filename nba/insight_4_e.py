@@ -8,10 +8,14 @@ import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
+INSIGHT_4_SQL = (
+    Path(__file__).resolve().parent.parent / "queries" / "insight_4.sql"
+)
+
 
 def get_monthly_game_counts(
     connection: sqlite3.Connection,
-    sql_path: Path,
+    sql_path: Path = INSIGHT_4_SQL,
 ) -> pd.DataFrame:
     """Load monthly game counts using the saved SQL query."""
     query = sql_path.read_text(encoding="utf-8")
