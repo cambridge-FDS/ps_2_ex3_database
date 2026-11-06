@@ -30,6 +30,13 @@ pixi run -e nba pre-commit run --all-files
 最后一条应全部通过。首次运行 pre-commit 会联网下载检查工具，请等待完成。
 每个 clone 都要安装 hooks；其他同学安装过不会自动替你安装。
 
+**已有 `nba` 环境的组员**请先同步小组 `main`，再在仓库根目录重新安装项目包，
+把 SQL 查询文件一起更新到已安装的包中。
+
+```bash
+pixi run -e nba python -m pip install --no-deps --no-build-isolation .
+```
+
 ### 3. 获取数据库并验证
 
 数据库不包含在 fork/clone 中。**没有 `data/nba.sqlite` 时**运行：

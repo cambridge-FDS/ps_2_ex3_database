@@ -67,3 +67,19 @@ pixi run -e nba validate
 pixi run -e nba validate --data data/nba.sqlite
 pixi run -e nba python -m unittest discover -s tests -v
 ```
+
+## How the command line works
+
+**`__main__` guard.** Running `python -m nba.data_loader` sets the module's
+`__name__` to `"__main__"`, so the guard calls `main()` to start the command.
+When a notebook imports the module, its name is `nba.data_loader` and the guard
+is skipped. The notebook can use `connect_database` without starting a download.
+
+**Click.** `@click.command()` turns `main` into a command, and `@click.option()`
+defines the `--dataset` (`-d`) and `--destination` options. Click parses the
+arguments, supplies defaults for omitted options, and converts the destination
+to a `Path`. It passes these values to `main()`, which calls
+`kaggle_download_data(dataset, destination)`.
+In the original course loader, `-u` (`--user-name`) supplies the Kaggle username,
+`-k` (`--api-key`) supplies the Kaggle API key, and `-d` (`--dataset`) supplies
+the required dataset identifier in `owner/dataset-name` form.

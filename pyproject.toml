@@ -10,4 +10,7 @@ description = "PS2 NBA database exercise"
 dependencies = ["click>=8,<9"]
 
 [tool.setuptools.packages.find]
-include = ["nba"]
+include = ["nba", "queries"]
+
+[tool.setuptools.package-data]
+queries = ["*.sql"]
